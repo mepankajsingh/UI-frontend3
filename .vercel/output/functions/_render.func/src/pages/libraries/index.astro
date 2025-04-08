@@ -1,0 +1,33 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import LibraryCard from '../../components/LibraryCard.astro';
+import { supabase } from '../../lib/supabase';
+
+// Fetch all libraries
+const { data: libraries } = await supabase
+  .from('libraries')
+  .select('id, name, slug, icon_url, description, github_stars, npm_downloads, pricing')
+  .order('github_stars', { ascending: false });
+---
+
+<Layout 
+  title="UI Libraries" 
+  description="Explore component libraries for your web development projects"
+>
+  <Hero 
+    title="UI Component Libraries" 
+    subtitle="Find the perfect components to build your next web application"
+  />
+  
+  <div class="py-8">
+    <SearchBar placeholder="Search libraries..." />
+  </div>
+  
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {libraries?.map(library => (
+      <LibraryCard library={library} />
+    ))}
+  </div>
+</Layout>

@@ -1,0 +1,32 @@
+---
+const navItems = [
+  { name: 'Home', href: '/' },
+  { name: 'Frameworks', href: '/frameworks' },
+  { name: 'Libraries', href: '/libraries' },
+];
+---
+
+<header class="bg-white shadow-sm">
+  <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-primary-600 font-bold text-2xl">UI River</span>
+    </a>
+    
+    <nav class="hidden md:flex items-center gap-6">
+      {navItems.map(item => (
+        <a 
+          href={item.href} 
+          class="text-gray-600 hover:text-primary-600 font-medium transition-colors"
+        >
+          {item.name}
+        </a>
+      ))}
+    </nav>
+    
+    <button class="md:hidden text-gray-600" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+  </div>
+</header>

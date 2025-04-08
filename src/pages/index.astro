@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import SearchBar from '../components/SearchBar.astro';
+import FrameworkCard from '../components/FrameworkCard.astro';
+import LibraryCard from '../components/LibraryCard.astro';
+import { supabase } from '../lib/supabase';
+
+// Fetch top frameworks
+const { data: frameworks, error: frameworksError } = await supabase
+  .from('frameworks')
+  .select('id, name, slug, icon_url, description, github_stars, npm_downloads')
+  .order('github_stars', { ascending: false })
+  .limit(4);
+
+// Fetch top libraries
+const { data: libraries, error: librariesError } = await supabase
+  .from('libraries')
+  .select('id, name, slug, icon_url, description, github_stars, npm_downloads, pricing')
+  .order('github_stars', { ascending: false })
+  .limit(4);
+
+// For debugging
+console.log("Frameworks data:", frameworks);
+console.log("Libraries data:", libraries);
+if (frameworksError) console.error("Frameworks error:", frameworksError);
+if (librariesError) console.error("Libraries error:", librariesError);
+---
+
+<Layout title="Discover UI Libraries and Frameworks">
+  <Hero 
+    title="Discover the Best UI Libraries and Frameworks" 
+    subtitle="Find the perfect components for your next web project"
+  />
+  
+  <div class="py-8">
+    <SearchBar placeholder="Search for libraries and frameworks..." />
+  </div>
+  
+  <section class="mb-12">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">Popular Frameworks</h2>
+      <a href="/frameworks" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
+        View all frameworks
+      </a>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {frameworks?.map(framework => (
+        <FrameworkCard framework={framework} />
+      ))}
+      {!frameworks || frameworks.length === 0 && (
+        <p class="text-gray-500 col-span-4 text-center py-8">No frameworks found</p>
+      )}
+    </div>
+  </section>
+  
+  <section class="mb-12">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">Popular Libraries</h2>
+      <a href="/libraries" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
+        View all libraries
+      </a>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {libraries?.map(library => (
+        <LibraryCard library={library} />
+      ))}
+      {!libraries || libraries.length === 0 && (
+        <p class="text-gray-500 col-span-4 text-center py-8">No libraries found</p>
+      )}
+    </div>
+  </section>
+</Layout>
